@@ -1,14 +1,17 @@
 {
   "name": "ftr-multi-agents",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node src/main.ts",
+    "comms:email": "node src/main.ts comms:email",
+    "bill:get": "node src/main.ts bill:get",
+    "bill:create": "node src/main.ts bill:create",
+    "bill:pay": "node src/main.ts bill:pay",
+    "appointment:schedule": "node src/main.ts appointment:schedule",
+    "appointment:reschedule": "node src/main.ts appointment:reschedule",
+    "appointment:cancel": "node src/main.ts appointment:cancel"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",

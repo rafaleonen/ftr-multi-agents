@@ -6,6 +6,9 @@ import { State } from "./state.ts";
 import { financialAgent } from "./workers/financial.ts";
 import { schedulingAgent } from "./workers/scheduling.ts";
 import { commsAgent } from "./workers/comms.ts";
+import { resolvePrompt } from "./prompts.ts";
+
+const content = resolvePrompt(process.argv.slice(2));
 
 const WORKERS = [AGENTS.FINANCIAL, AGENTS.SCHEDULING, AGENTS.COMMS];
 
@@ -28,8 +31,15 @@ const graph = new StateGraph(State)
   .compile();
 
 const result = await graph.invoke(
-  { input: new HumanMessage("Olá do Humano") },
+  {
+    messages: [
+      new HumanMessage({
+        content,
+        name: "Human",
+      }),
+    ],
+  },
   { recursionLimit: 10 }, // trava de segurança caso a lógica de parada falhe
 );
 
-console.log(result.output.map((m) => `${m.name}: ${m.content}`));
+console.log(result.messages.map((m) => `${m.name}: ${m.content}`));
