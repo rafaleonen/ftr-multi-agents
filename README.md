@@ -49,20 +49,20 @@ pnpm install
 
 Cada script envia um prompt pré-definido (veja `src/prompts.ts`) como primeira mensagem do usuário:
 
-| Comando                        | Prompt enviado                                                                                         |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `pnpm bill:get`                | Quero ver a minha conta                                                                                |
-| `pnpm bill:create`             | Crie uma conta no valor de $150.00                                                                     |
-| `pnpm bill:pay`                | Pague a minha conta                                                                                    |
-| `pnpm appointment:schedule`    | Faça o agendamento da consulta                                                                         |
-| `pnpm appointment:reschedule`  | Reagende a consulta                                                                                    |
-| `pnpm appointment:cancel`      | Cancela a consulta agendada                                                                            |
-| `pnpm comms:email`             | Envie um email para o cliente falando que houve despesas no almoxarifado e que os avanços do projeto estão dentro do prazo |
+| Comando                       | Prompt enviado                                                                                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm bill:get`               | Quero ver a minha conta                                                                                                    |
+| `pnpm bill:create`            | Crie uma conta no valor de $150.00                                                                                         |
+| `pnpm bill:pay`               | Pague a minha conta                                                                                                        |
+| `pnpm appointment:schedule`   | Faça o agendamento da consulta                                                                                             |
+| `pnpm appointment:reschedule` | Reagende a consulta                                                                                                        |
+| `pnpm appointment:cancel`     | Cancela a consulta agendada                                                                                                |
+| `pnpm comms:email`            | Envie um email para o cliente falando que houve despesas no almoxarifado e que os avanços do projeto estão dentro do prazo |
 
 Também dá para mandar um texto livre:
 
 ```bash
-pnpm dev "Quanto devo?"
+pnpm chat "Quanto devo?"
 ```
 
 Exemplo de saída:
@@ -149,11 +149,11 @@ const financialAgentAI = createAgent({
 
 O agente repete este ciclo: **modelo → tool_calls → executa tools → ToolMessage → modelo**, até o modelo responder sem tool calls. O nó do grafo pega a última mensagem e a devolve como `AIMessage` com o `name` do agente.
 
-| Worker       | Responsabilidade               | Tools                                                                  |
-| ------------ | ------------------------------ | ---------------------------------------------------------------------- |
-| `financial`  | Contas do usuário              | `get_bill`, `create_bill`, `pay_bill`                                  |
-| `scheduling` | Agenda de consultas            | `schedule_appointment`, `reschedule_appointment`, `cancela_appointment` |
-| `comms`      | Comunicação com o cliente      | `send_email`                                                           |
+| Worker       | Responsabilidade          | Tools                                                                   |
+| ------------ | ------------------------- | ----------------------------------------------------------------------- |
+| `financial`  | Contas do usuário         | `get_bill`, `create_bill`, `pay_bill`                                   |
+| `scheduling` | Agenda de consultas       | `schedule_appointment`, `reschedule_appointment`, `cancela_appointment` |
+| `comms`      | Comunicação com o cliente | `send_email`                                                            |
 
 ### Tools
 
@@ -162,10 +162,11 @@ O agente repete este ciclo: **modelo → tool_calls → executa tools → ToolMe
 Criadas com a função `tool()`, que gera um `DynamicStructuredTool`:
 
 ```ts
-export const getBill = tool(
-  async () => "Sua conta tem o valor de R$500,00!",
-  { name: "get_bill", description: "Buscar a conta do usuário", schema: z.object({}) },
-);
+export const getBill = tool(async () => "Sua conta tem o valor de R$500,00!", {
+  name: "get_bill",
+  description: "Buscar a conta do usuário",
+  schema: z.object({}),
+});
 ```
 
 Boas práticas usadas:
@@ -194,12 +195,12 @@ Por isso, qualquer componente do LangChain que espera um chat model com tool cal
 
 `tool_choice` suportado:
 
-| Valor               | Comportamento                                  |
-| ------------------- | ---------------------------------------------- |
-| `"auto"` (padrão)   | Pode responder só com texto (`tool_calls: []`) |
-| `"any"`/`"required"`| Precisa chamar pelo menos uma tool             |
-| `"<nome_da_tool>"`  | Só aquela tool, obrigatória                    |
-| `"none"`            | Ignora as tools                                |
+| Valor                | Comportamento                                  |
+| -------------------- | ---------------------------------------------- |
+| `"auto"` (padrão)    | Pode responder só com texto (`tool_calls: []`) |
+| `"any"`/`"required"` | Precisa chamar pelo menos uma tool             |
+| `"<nome_da_tool>"`   | Só aquela tool, obrigatória                    |
+| `"none"`             | Ignora as tools                                |
 
 **Isolamento**
 

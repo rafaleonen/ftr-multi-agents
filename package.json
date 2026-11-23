@@ -2,7 +2,7 @@
   "name": "ftr-multi-agents",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node src/main.ts",
+    "chat": "node src/main.ts",
     "comms:email": "node src/main.ts comms:email",
     "bill:get": "node src/main.ts bill:get",
     "bill:create": "node src/main.ts bill:create",
